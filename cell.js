@@ -50,36 +50,22 @@ class Cell {
     }
 
     display() {
-        if(this.revealed) {
-            let x = this.j * cDim;
-            let y = this.i * cDim;
-            if(this.mine) {
-                if(this.marked)
-                    ctx.clearRect(x+1, y+1, cDim-2, cDim-2);
-                x += cDim/8;
-                y += cDim/8;
-                ctx.drawImage(mineImg, x, y, cDim*0.75, cDim*0.75);
-            }
-            else {
-                if(this.marked) {                       // For displaying wrong markers placed when game is over
-                    ctx.strokeStyle = "red";
-                    ctx.beginPath();
-                    ctx.moveTo(x+1, y+1);
-                    ctx.lineTo(x+cDim-1, y+cDim-1);
-                    ctx.moveTo(x+cDim-1, y+1);
-                    ctx.lineTo(x+1, y+cDim-1);
-                    ctx.stroke();
-                    return;
-                }
-                ctx.fillStyle = "#bbbbbb";
-                ctx.fillRect(x+1, y+1, cDim-2, cDim-2);
-                x += cDim*0.35;
-                y += cDim*0.7;
-                ctx.fillStyle = "black";
-                ctx.font = `800 ${cDim/2}px Arial`;
-                if(this.mineCount != 0)
-                    ctx.fillText(this.mineCount, x, y);
-            }
+        let x = this.j * cDim;
+        let y = this.i * cDim;
+        
+        if(!this.revealed) {
+            if(this.marked)
+                ctx.drawImage(images['marker'], x+1, y+1, cDim-2, cDim-2);
+            else
+                ctx.drawImage(images['cell'], x+1, y+1, cDim-2, cDim-2);
+        }
+        else {
+            if(this.mine)
+                ctx.drawImage(images['mine'], x+1, y+1, cDim-2, cDim-2);
+            else if(this.marked)
+                ctx.drawImage(images['mine_wrong'], x+1, y+1, cDim-2, cDim-2);
+            else
+                ctx.drawImage(images['num'][this.mineCount], x+1, y+1, cDim-2, cDim-2);
         }
     }
 }

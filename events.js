@@ -29,13 +29,14 @@ function handleClick(e) {
 
         if(board[i][j].mine) {
             gameOver();
-            ctx.fillStyle = "#ff1f1f";
+            display();
             x = j * cDim;
             y = i * cDim;
-            ctx.fillRect(x+1, y+1, cDim-2, cDim-2);
+            ctx.drawImage(images['mine_red'], x+1, y+1, cDim-2, cDim-2);
             canvas.removeEventListener('click', handleClick);
             canvas.removeEventListener('click', handleClickMobile);
-            canvas.removeEventListener('contextmenu', handleMarker); 
+            canvas.removeEventListener('contextmenu', handleMarker);
+            return;
         }
     }
     display();
@@ -50,14 +51,9 @@ function handleMarker(e) {
     let j = Math.floor(x/cDim);
     x = j * cDim;
     y = i * cDim;
-    if(!board[i][j].revealed) {
-        if(board[i][j].marked) {
-            board[i][j].marked = false;
-            ctx.clearRect(x+1, y+1, cDim-2, cDim-2);
-        }
-        else {
-            board[i][j].marked = true;
-            ctx.drawImage(markerImg, x+cDim/8, y+cDim/8, cDim*0.75, cDim*0.75);
-        }
-    }
+
+    if(!board[i][j].revealed)
+        board[i][j].marked = !board[i][j].marked;
+        
+    display();
 }

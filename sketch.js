@@ -8,10 +8,7 @@ const dim = canvas.width;               // Length of board
 const cDim = 30;                        // Length of cell
 const nCells = canvas.width / cDim;     // Number of cells (In a row/col)
 
-const mineImg = new Image();
-mineImg.src = "assets/mine.png";
-const markerImg = new Image();
-markerImg.src = "assets/marker.png";
+const images = {};
 
 setup();
 console.log(board);
@@ -33,6 +30,9 @@ function display() {
 }
 
 function setup() {
+    loadImages();
+
+    // Draw grid
     ctx.lineWidth = 2;
     for(let i=0; i<=dim; i+=cDim){
         ctx.beginPath();
@@ -43,6 +43,7 @@ function setup() {
         ctx.stroke();
     }
 
+    // Initialize each cell of the board
     board = new Array(nCells);
     for(let i=0; i<nCells; i++) {
         board[i] = new Array(nCells);
@@ -51,6 +52,7 @@ function setup() {
         }
     }
 
+    // Place mines on the board randomly
     for(let x=0; x<totalMines; x++) {
         let i = Math.floor(Math.random() * nCells);
         let j = Math.floor(Math.random() * nCells);
@@ -61,12 +63,14 @@ function setup() {
         board[i][j].mine = true;
     }
 
+    // Count neighbouring mines for each cell
     for(let i=0; i<nCells; i++) {
         for(let j=0; j<nCells; j++) {
             board[i][j].countMines();
         }
     }
 
+    // Set user interface based on the system
     if(window.innerWidth > window.innerHeight) {
         canvas.addEventListener('click', handleClick);
         canvas.addEventListener('contextmenu', handleMarker);        // For detecting right click
@@ -74,4 +78,30 @@ function setup() {
     else {
         canvas.addEventListener('click', handleClickMobile); 
     }
+
+    // Display the board after last image (cell) is loaded
+    images['cell'].onload = function() {
+        display();
+    }
+}
+
+function loadImages() {
+    images['mine'] = new Image();
+    images['mine'].src = "assets/mine.png";
+    images['mine_red'] = new Image();
+    images['mine_red'].src = "assets/mine_red.png";
+    images['mine_wrong'] = new Image();
+    images['mine_wrong'].src = "assets/mine_wrong.png";
+    
+    images['marker'] = new Image();
+    images['marker'].src = "assets/marker.png";
+    
+    images['num'] = new Array(9);
+    for(let i=0; i<9; i++) {
+        images['num'][i] = new Image();    
+        images['num'][i].src = `assets/num${i}.png`;
+    }
+
+    images['cell'] = new Image();
+    images['cell'].src = "assets/cell.png";
 }
