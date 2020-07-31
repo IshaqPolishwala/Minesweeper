@@ -71,7 +71,7 @@ function setup() {
     }
 
     // Set user interface based on the system
-    if(window.innerWidth < window.innerHeight) {
+    if(window.innerWidth > window.innerHeight) {
         canvas.addEventListener('click', handleClick);
         canvas.addEventListener('contextmenu', handleMarker);       // For detecting right click
     }
