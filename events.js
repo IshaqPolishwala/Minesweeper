@@ -1,17 +1,14 @@
 let clicks = 0, timer = null;
-let start,end;
+
 function handleClickMobile(e) {             // (Single-click => Reveal) (Double-click => Handle marker)
     clicks++;
     if(clicks == 1) {
-        start=new Date();
         timer = setTimeout(function() {
             handleClick(e);
             clicks = 0;
         }, 200);
     }
     else {
-        end=new Date();
-        document.getElementById("test").innerHTML = end-start;
         clearTimeout(timer);
         handleMarker(e);
         clicks = 0;
@@ -43,7 +40,7 @@ function handleClick(e) {
 }
 
 function handleMarker(e) {
-    e.preventDefault();         // For not displaying context menu which right clicked
+    e.preventDefault();             // Cancel system right-click event
     
     let x = e.pageX - canvas.offsetLeft;
     let y = e.pageY - canvas.offsetTop;

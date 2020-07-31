@@ -73,10 +73,13 @@ function setup() {
     // Set user interface based on the system
     if(window.innerWidth > window.innerHeight) {
         canvas.addEventListener('click', handleClick);
-        canvas.addEventListener('contextmenu', handleMarker);        // For detecting right click
+        canvas.addEventListener('contextmenu', handleMarker);       // For detecting right click
     }
     else {
-        canvas.addEventListener('click', handleClickMobile); 
+        canvas.addEventListener('click', handleClickMobile);
+        canvas.addEventListener('dblclick', function() {
+            e.preventDefault();                                     // Cancel system double-click event
+        });
     }
 
     // Display the board after last image (cell) is loaded
