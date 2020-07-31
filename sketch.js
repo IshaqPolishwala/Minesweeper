@@ -2,16 +2,34 @@ const canvas = document.getElementById("myCanvas");
 const ctx = canvas.getContext("2d");
 
 let board;
-const totalMines = 10;
+const images = {};
+const totalMines = 30;
 
 const dim = canvas.width;               // Length of board
 const cDim = 30;                        // Length of cell
 const nCells = canvas.width / cDim;     // Number of cells (In a row/col)
 
-const images = {};
-
+setCanvasSize();
 setup();
 console.log(board);
+
+function checkWin() {
+    let flag = true;
+    for(let i=0; i<nCells; i++) {
+        for(let j=0; j<nCells; j++) {
+            if(!board[i][j].mine && !board[i][j].revealed) {
+                flag = false;
+                break;
+            }
+        }
+    }
+    if(flag) {
+        document.getElementById("result").innerHTML = "Game won!";
+        canvas.removeEventListener('click', handleClick);
+        canvas.removeEventListener('click', handleClickMobile);
+        canvas.removeEventListener('contextmenu', handleMarker);
+    }
+}
 
 function gameOver() {
     for(let i=0; i<nCells; i++) {
@@ -27,6 +45,7 @@ function display() {
             board[i][j].display();
         }
     }
+    checkWin();
 }
 
 function setup() {
@@ -104,4 +123,12 @@ function loadImages() {
 
     images['cell'] = new Image();
     images['cell'].src = "assets/cell.png";
+}
+
+function setCanvasSize() {
+    if(window.innerWidth < window.innerHeight) {
+        nCells = Math.floor((window.innerWidth - 30) / cDim);
+        canvas.width = nCells * cDim;
+        dim = canvas.width;
+    }
 }
