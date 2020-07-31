@@ -129,6 +129,7 @@ function setCanvasSize() {
     if(window.innerWidth < window.innerHeight) {
         nCells = Math.floor((window.innerWidth - 30) / cDim);
         canvas.width = nCells * cDim;
+        canvas.height = canvas.width;
         dim = canvas.width;
     }
 }
