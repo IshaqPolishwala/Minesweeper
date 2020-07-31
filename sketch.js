@@ -7,7 +7,6 @@ const totalMines = 10;
 const dim = canvas.width;               // Length of board
 const cDim = 30;                        // Length of cell
 const nCells = canvas.width / cDim;     // Number of cells (In a row/col)
-let start, end, delta;                  // For detecting long press (For mobile)
 
 const mineImg = new Image();
 mineImg.src = "assets/mine.png";
@@ -68,13 +67,11 @@ function setup() {
         }
     }
 
-    canvas.addEventListener("click", handleClick);
-    
     if(window.innerWidth > window.innerHeight) {
-        canvas.addEventListener('contextmenu', leftClicked);        // For detecting right click
+        canvas.addEventListener('click', handleClick);
+        canvas.addEventListener('contextmenu', handleMarker);        // For detecting right click
     }
     else {
-        canvas.addEventListener("mousedown", startTime);
-        canvas.addEventListener("mouseup", endTime);
+        canvas.addEventListener('click', handleClickMobile); 
     }
 }

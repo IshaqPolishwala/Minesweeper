@@ -1,28 +1,50 @@
+let clicks = 0, timer = null;
+
+function handleClickMobile(e) {             // (Single-click => Reveal) (Double-click => Handle marker)
+    clicks++;
+    if(clicks == 1) {
+        timer = setTimeout(function() {
+            handleClick(e);
+            clicks = 0;
+        }, 200);
+    }
+    else {
+        clearTimeout(timer);
+        handleMarker(e);
+        clicks = 0;
+    }
+}
+
 function handleClick(e) {
-    let x = e.clientX - canvas.offsetLeft;
-    let y = e.clientY - canvas.offsetTop;
+    let x = e.pageX - canvas.offsetLeft;
+    let y = e.pageY - canvas.offsetTop;
     let i = Math.floor(y/cDim);
     let j = Math.floor(x/cDim);
 
-    if(!board[i][j].marked && !board[i][j].longPressed) {
+    if(!board[i][j].marked) {
         board[i][j].reveal();
+
         if(board[i][j].mine) {
             gameOver();
             ctx.fillStyle = "#ff1f1f";
             x = j * cDim;
             y = i * cDim;
             ctx.fillRect(x+1, y+1, cDim-2, cDim-2);
-            canvas.removeEventListener("click", handleClick);
-            canvas.removeEventListener("mousedown", startTime);
-            canvas.removeEventListener("mouseup", endTime);
-            canvas.removeEventListener('contextmenu', leftClicked); 
+            canvas.removeEventListener('click', handleClick);
+            canvas.removeEventListener('click', handleClickMobile);
+            canvas.removeEventListener('contextmenu', handleMarker); 
         }
     }
-    board[i][j].longPressed = false;
     display();
 }
 
-function handleMarker(i, j) {
+function handleMarker(e) {
+    e.preventDefault();         // For not displaying context menu which right clicked
+    
+    let x = e.pageX - canvas.offsetLeft;
+    let y = e.pageY - canvas.offsetTop;
+    let i = Math.floor(y/cDim);
+    let j = Math.floor(x/cDim);
     x = j * cDim;
     y = i * cDim;
     if(!board[i][j].revealed) {
@@ -35,34 +57,4 @@ function handleMarker(i, j) {
             ctx.drawImage(markerImg, x+cDim/8, y+cDim/8, cDim*0.75, cDim*0.75);
         }
     }
-}
-
-function startTime() {
-    start = new Date();
-}
-
-function endTime(e) {
-    end = new Date();
-    delta = end - start;
-
-    let x = e.clientX - canvas.offsetLeft;
-    let y = e.clientY - canvas.offsetTop;
-    let i = Math.floor(y/cDim);
-    let j = Math.floor(x/cDim);
-    
-    if(delta > 400) {
-        board[i][j].longPressed = true;
-        handleMarker(i, j);
-    }
-}
-
-function leftClicked(e) {
-    e.preventDefault();         // For not displaying context menu which right clicked
-    
-    let x = e.clientX - canvas.offsetLeft;
-    let y = e.clientY - canvas.offsetTop;
-    let i = Math.floor(y/cDim);
-    let j = Math.floor(x/cDim);
-    
-    handleMarker(i, j);
 }
