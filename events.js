@@ -7,7 +7,7 @@ function handleClickMobile(e) {             // (Single-click => Reveal) (Double-
         timer = setTimeout(function() {
             handleClick(e);
             clicks = 0;
-        }, 1000);
+        }, 200);
     }
     else {
         end=new Date();
