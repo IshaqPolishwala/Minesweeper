@@ -77,7 +77,7 @@ function setup() {
     }
     else {
         canvas.addEventListener('click', handleClickMobile);
-        canvas.addEventListener('dblclick', function() {
+        canvas.addEventListener('dblclick', function(e) {
             e.preventDefault();                                     // Cancel system double-click event
         });
     }
