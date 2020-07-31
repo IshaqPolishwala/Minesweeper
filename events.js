@@ -1,14 +1,17 @@
 let clicks = 0, timer = null;
-
+let start,end;
 function handleClickMobile(e) {             // (Single-click => Reveal) (Double-click => Handle marker)
     clicks++;
     if(clicks == 1) {
+        start=new Date();
         timer = setTimeout(function() {
             handleClick(e);
             clicks = 0;
         }, 1000);
     }
     else {
+        end=new Date();
+        document.getElementById("test").innerHTML = end-start;
         clearTimeout(timer);
         handleMarker(e);
         clicks = 0;
