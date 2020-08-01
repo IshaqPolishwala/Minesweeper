@@ -2,7 +2,7 @@ const canvas = document.getElementById("myCanvas");
 const result = document.getElementById("result");
 const ctx = canvas.getContext("2d");
 
-let board;
+let board, gameFinished;
 const images = {};
 const cDim = 30;                                        // Length of cell
 
@@ -12,13 +12,12 @@ const dim = canvas.width;                               // Length of board
 const nCells = canvas.width / cDim;                     // Number of cells (In a row/col)
 const totalMines = Math.floor(nCells*nCells / 7);       // 1 out 7 cells will contain a mine
 
+loadImages();
 setup();
-console.log(board);
 
-let gameFinished = false;
 result.addEventListener('click', function() {
     if(gameFinished || confirm("New game?"))
-        location.reload();
+        setup();
 });
 
 function checkWin() {
@@ -60,7 +59,8 @@ function display() {
 }
 
 function setup() {
-    loadImages();
+    result.src = images['smiley'];
+    gameFinished = false;
 
     // Draw grid
     ctx.lineWidth = 2;
@@ -109,11 +109,8 @@ function setup() {
         canvas.addEventListener('click', handleClickMobile);
     }
 
-    // Display the board after last image (cell) is loaded
-    images['cell'].onload = function() {
-        result.src = images['smiley'];
-        display();
-    }
+    display();
+    console.log(board);             // Can use this as a cheat XD
 }
 
 function loadImages() {
@@ -142,6 +139,12 @@ function loadImages() {
 
     images['cell'] = new Image();
     images['cell'].src = "assets/cell.png";
+
+    // Display the board after last image (cell) is loaded
+    images['cell'].onload = function() {
+        result.src = images['smiley'];
+        display();
+    }
 }
 
 function setCanvasSize() {
