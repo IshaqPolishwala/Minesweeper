@@ -9,7 +9,7 @@ setCanvasSize();
 
 const dim = canvas.width;                               // Length of board
 const nCells = canvas.width / cDim;                     // Number of cells (In a row/col)
-const totalMines = 2       // 1 out 7 cells will contain a mine
+const totalMines = Math.floor(nCells*nCells / 7);       // 1 out 7 cells will contain a mine
 
 setup();
 console.log(board);
