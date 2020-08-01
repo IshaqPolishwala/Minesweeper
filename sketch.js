@@ -1,4 +1,5 @@
 const canvas = document.getElementById("myCanvas");
+const result = document.getElementById("result");
 const ctx = canvas.getContext("2d");
 
 let board;
@@ -9,10 +10,16 @@ setCanvasSize();
 
 const dim = canvas.width;                               // Length of board
 const nCells = canvas.width / cDim;                     // Number of cells (In a row/col)
-const totalMines = Math.floor(nCells*nCells / 7);       // 1 out 7 cells will contain a mine
+const totalMines = 10       // 1 out 7 cells will contain a mine
 
 setup();
 console.log(board);
+
+let gameFinished = false;
+result.addEventListener('click', function() {
+    if(gameFinished || confirm("New game?"))
+        location.reload();
+});
 
 function checkWin() {
     let flag = true, cell;
@@ -26,7 +33,8 @@ function checkWin() {
         }
     }
     if(flag) {
-        document.getElementById("result").innerHTML = "Game won!";
+        gameFinished = true;
+        document.getElementById("result").src = "assets/smiley_won.png";
         canvas.removeEventListener('click', handleClick);
         canvas.removeEventListener('click', handleClickMobile);
         canvas.removeEventListener('contextmenu', handleMarker);
@@ -34,6 +42,8 @@ function checkWin() {
 }
 
 function gameOver() {
+    gameFinished = true;
+    document.getElementById("result").src = "assets/smiley_lost.png";
     for(let i=0; i<nCells; i++) {
         for(let j=0; j<nCells; j++) {
             board[i][j].revealed = true;
@@ -51,6 +61,7 @@ function display() {
 
 function setup() {
     loadImages();
+    result.src = "assets/smiley.png";
 
     // Draw grid
     ctx.lineWidth = 2;
@@ -131,4 +142,5 @@ function setCanvasSize() {
     let n = Math.floor(eWidth / cDim);
     canvas.width = n * cDim;
     canvas.height = n * cDim;
+    result.width = canvas.width / 6;
 }
