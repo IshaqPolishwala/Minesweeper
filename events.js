@@ -37,6 +37,7 @@ function handleClick(e) {
         }
     }
     display();
+    checkWin();
 }
 
 function handleMarker(e) {

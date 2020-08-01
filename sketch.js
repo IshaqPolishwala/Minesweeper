@@ -3,13 +3,14 @@ const ctx = canvas.getContext("2d");
 
 let board;
 const images = {};
-const totalMines = 30;
-
-const dim = canvas.width;               // Length of board
-const cDim = 30;                        // Length of cell
-const nCells = canvas.width / cDim;     // Number of cells (In a row/col)
+const cDim = 50;                                        // Length of cell
 
 setCanvasSize();
+
+const dim = canvas.width;                               // Length of board
+const nCells = canvas.width / cDim;                     // Number of cells (In a row/col)
+const totalMines = Math.floor(nCells*nCells / 7);       // 1 out 7 cells will contain a mine
+
 setup();
 console.log(board);
 
@@ -45,7 +46,6 @@ function display() {
             board[i][j].display();
         }
     }
-    checkWin();
 }
 
 function setup() {
@@ -126,10 +126,8 @@ function loadImages() {
 }
 
 function setCanvasSize() {
-    if(window.innerWidth < window.innerHeight) {
-        nCells = Math.floor((window.innerWidth - 30) / cDim);
-        canvas.width = nCells * cDim;
-        canvas.height = canvas.width;
-        dim = canvas.width;
-    }
+    let eWidth = window.innerWidth > window.innerHeight ? 500 : (window.innerWidth - 30);
+    let n = Math.floor(eWidth / cDim);
+    canvas.width = n * cDim;
+    canvas.height = n * cDim;
 }
