@@ -3,7 +3,7 @@ const ctx = canvas.getContext("2d");
 
 let board;
 const images = {};
-const cDim = 50;                                        // Length of cell
+const cDim = 30;                                        // Length of cell
 
 setCanvasSize();
 
