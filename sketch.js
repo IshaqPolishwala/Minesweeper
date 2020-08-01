@@ -10,7 +10,7 @@ setCanvasSize();
 
 const dim = canvas.width;                               // Length of board
 const nCells = canvas.width / cDim;                     // Number of cells (In a row/col)
-const totalMines = 10       // 1 out 7 cells will contain a mine
+const totalMines = Math.floor(nCells*nCells / 7);       // 1 out 7 cells will contain a mine
 
 setup();
 console.log(board);
@@ -34,7 +34,7 @@ function checkWin() {
     }
     if(flag) {
         gameFinished = true;
-        document.getElementById("result").src = "assets/smiley_won.png";
+        result.src = images['smiley_won'];
         canvas.removeEventListener('click', handleClick);
         canvas.removeEventListener('click', handleClickMobile);
         canvas.removeEventListener('contextmenu', handleMarker);
@@ -43,7 +43,7 @@ function checkWin() {
 
 function gameOver() {
     gameFinished = true;
-    document.getElementById("result").src = "assets/smiley_lost.png";
+    result.src = images['smiley_lost'];
     for(let i=0; i<nCells; i++) {
         for(let j=0; j<nCells; j++) {
             board[i][j].revealed = true;
@@ -61,7 +61,6 @@ function display() {
 
 function setup() {
     loadImages();
-    result.src = "assets/smiley.png";
 
     // Draw grid
     ctx.lineWidth = 2;
@@ -112,6 +111,7 @@ function setup() {
 
     // Display the board after last image (cell) is loaded
     images['cell'].onload = function() {
+        result.src = images['smiley'];
         display();
     }
 }
@@ -132,6 +132,13 @@ function loadImages() {
         images['num'][i] = new Image();    
         images['num'][i].src = `assets/num${i}.png`;
     }
+
+    images['smiley'] = new Image();
+    images['smiley'] = "assets/smiley.png";
+    images['smiley_won'] = new Image();
+    images['smiley_won'] = "assets/smiley_won.png";
+    images['smiley_lost'] = new Image();
+    images['smiley_lost'] = "assets/smiley_lost.png";
 
     images['cell'] = new Image();
     images['cell'].src = "assets/cell.png";
