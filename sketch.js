@@ -9,18 +9,19 @@ setCanvasSize();
 
 const dim = canvas.width;                               // Length of board
 const nCells = canvas.width / cDim;                     // Number of cells (In a row/col)
-const totalMines = Math.floor(nCells*nCells / 7);       // 1 out 7 cells will contain a mine
+const totalMines = 2       // 1 out 7 cells will contain a mine
 
 setup();
 console.log(board);
 
 function checkWin() {
-    let flag = true;
+    let flag = true, cell;
     for(let i=0; i<nCells; i++) {
         for(let j=0; j<nCells; j++) {
-            if(!board[i][j].mine && !board[i][j].revealed) {
-                flag = false;
-                break;
+            cell = board[i][j];
+            if(cell.mine && !cell.marked || !cell.mine && !cell.revealed) {
+                    flag = false;
+                    break;
             }
         }
     }

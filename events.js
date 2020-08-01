@@ -54,4 +54,5 @@ function handleMarker(e) {
         board[i][j].marked = !board[i][j].marked;
         
     display();
+    checkWin();
 }
