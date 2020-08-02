@@ -3,20 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    <link rel="icon" href="assets/favicon.png" type="image/png">
     <title> Minesweeper </title>
     <style>
-        body {
+        * {
+            margin: 0px;
             text-align: center;
+        }
+
+        #header-container {
+            margin-top: 30px;
+            background-color: #c0c0c0;
+            border: 1px solid;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         #result {
             margin: 30px;
         }
+        
+        p {
+            position: absolute;
+            font-family: VT323;
+        }
     </style>
 </head>
 <body>
-    <div>
+    <div id="header-container">
+        <p id="minesCounter"> </p>
         <img id="result">
+        <p id="time"> </p>
     </div>
     <canvas id="myCanvas" width=0 height=0> </canvas>
     <script src="cell.js"> </script>

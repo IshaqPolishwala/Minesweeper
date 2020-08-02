@@ -1,15 +1,16 @@
-const canvas = document.getElementById("myCanvas");
+const minesCounter = document.getElementById("minesCounter");
 const result = document.getElementById("result");
+const timeCounter = document.getElementById("time");
+const canvas = document.getElementById("myCanvas");
 const ctx = canvas.getContext("2d");
 
-let board, gameFinished;
+let board, gameFinished, minesLeft, timeElapsed, timer;
 const images = {};
-const cDim = 30;                                        // Length of cell
+let dim, cDim = 30;                                     // Length of board & cell
 
-setCanvasSize();
+setElements();                                          // Set according to device
 
-const dim = canvas.width;                               // Length of board
-const nCells = canvas.width / cDim;                     // Number of cells (In a row/col)
+const nCells = dim / cDim;                              // Number of cells (In a row/col)
 const totalMines = Math.floor(nCells*nCells / 7);       // 1 out 7 cells will contain a mine
 
 loadImages();
@@ -32,8 +33,11 @@ function checkWin() {
         }
     }
     if(flag) {
-        gameFinished = true;
+        clearInterval(timer);
         result.src = images['smiley_won'];
+        
+        gameFinished = true;
+        
         canvas.removeEventListener('click', handleClick);
         canvas.removeEventListener('click', handleClickMobile);
         canvas.removeEventListener('contextmenu', handleMarker);
@@ -41,6 +45,7 @@ function checkWin() {
 }
 
 function gameOver() {
+    clearInterval(timer);
     gameFinished = true;
     result.src = images['smiley_lost'];
     for(let i=0; i<nCells; i++) {
@@ -59,6 +64,14 @@ function display() {
 }
 
 function setup() {
+    clearInterval(timer);
+
+    minesLeft = totalMines;
+    minesCounter.innerHTML = "Mines: " + minesLeft;
+
+    timeElapsed = 0;
+    timeCounter.innerHTML = "Time: " + timeElapsed;
+
     result.src = images['smiley'];
     gameFinished = false;
 
@@ -109,6 +122,8 @@ function setup() {
         canvas.addEventListener('click', handleClickMobile);
     }
 
+    canvas.addEventListener('click', startTimer);
+
     display();
     console.log(board);             // Can use this as a cheat XD
 }
@@ -147,10 +162,21 @@ function loadImages() {
     }
 }
 
-function setCanvasSize() {
+function setElements() {
     let eWidth = window.innerWidth > window.innerHeight ? 500 : (window.innerWidth - 30);
-    let n = Math.floor(eWidth / cDim);
-    canvas.width = n * cDim;
-    canvas.height = n * cDim;
-    result.width = canvas.width / 6;
+    dim = Math.floor(eWidth / cDim) * cDim;
+    canvas.width = dim;
+    canvas.height = dim;
+
+    let header_container = document.getElementById("header-container").style;
+    header_container.marginLeft = canvas.offsetLeft.toString() + "px";
+    header_container.width = dim.toString() + "px";
+
+    minesCounter.style.fontSize = (dim/15).toString() + "px";
+    minesCounter.style.left = (canvas.offsetLeft+30).toString() + "px";
+
+    result.width = dim/6;
+
+    timeCounter.style.fontSize = (dim/15).toString() + "px";
+    timeCounter.style.right = (canvas.offsetLeft+30).toString() + "px";
 }

@@ -1,15 +1,15 @@
-let clicks = 0, timer = null;
+let clicks = 0, clickTimer;
 
 function handleClickMobile(e) {             // (Single-click => Reveal) (Double-click => Handle marker)
     clicks++;
     if(clicks == 1) {
-        timer = setTimeout(function() {
+        clickTimer = setTimeout(function() {
             handleClick(e);
             clicks = 0;
         }, 200);
     }
     else {
-        clearTimeout(timer);
+        clearTimeout(clickTimer);
         handleMarker(e);
         clicks = 0;
     }
@@ -36,6 +36,7 @@ function handleClick(e) {
             return;
         }
     }
+    
     display();
     checkWin();
 }
@@ -47,12 +48,22 @@ function handleMarker(e) {
     let y = e.pageY - canvas.offsetTop;
     let i = Math.floor(y/cDim);
     let j = Math.floor(x/cDim);
-    x = j * cDim;
-    y = i * cDim;
 
-    if(!board[i][j].revealed)
+    if(!board[i][j].revealed) {
         board[i][j].marked = !board[i][j].marked;
+        minesLeft += board[i][j].marked ? -1 : 1;
+        minesCounter.innerHTML = "Mines: " + minesLeft;
+    }
         
     display();
     checkWin();
+}
+
+function startTimer() {
+    timer = setInterval(function() {
+        timeElapsed += 1;
+        timeCounter.innerHTML = "Time: " + timeElapsed;
+    }, 1000);
+
+    canvas.removeEventListener('click', startTimer);
 }
