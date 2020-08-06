@@ -25,8 +25,7 @@ function handleClick(e) {
         board[i][j].reveal();
 
         if(board[i][j].mine) {
-            gameOver();
-            display();
+            gameLost();
             x = j * cDim;
             y = i * cDim;
             ctx.drawImage(images['mine_red'], x+1, y+1, cDim-2, cDim-2);

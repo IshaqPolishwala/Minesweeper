@@ -5,7 +5,7 @@ const canvas = document.getElementById("myCanvas");
 const ctx = canvas.getContext("2d");
 
 let board, gameFinished, minesLeft, timeElapsed, timer;
-const images = {};
+let images = {};
 let width, height, cDim = 35;                           // Length of board & cell
 
 setElements();                                          // Set according to device
@@ -33,24 +33,30 @@ function checkWin() {
             }
         }
     }
-    if(flag) {
-        clearInterval(timer);
-        result.src = images['smiley_won'];
-        gameFinished = true;
-        removeAllEvents();
-    }
+    if(flag)
+        gameWon();        
 }
 
-function gameOver() {
+function gameWon() {
+    clearInterval(timer);
+    result.src = images['smiley_won'];
+    gameFinished = true;
+    removeAllEvents();
+    alert("Game completed in " + timeElapsed + " sec");
+}
+
+function gameLost() {
     clearInterval(timer);
     gameFinished = true;
     result.src = images['smiley_lost'];
+    removeAllEvents();
+
     for(let i=0; i<nRows; i++) {
         for(let j=0; j<nCols; j++) {
             board[i][j].revealed = true;
+            board[i][j].display();
         }
     }
-    removeAllEvents();
 }
 
 function display() {
@@ -63,15 +69,15 @@ function display() {
 
 function setup() {
     clearInterval(timer);
+    gameFinished = false;
 
     minesLeft = totalMines;
     minesCounter.innerHTML = "Mines: " + minesLeft;
 
+    result.src = images['smiley'];
+    
     timeElapsed = 0;
     timeCounter.innerHTML = "Time: " + timeElapsed;
-
-    result.src = images['smiley'];
-    gameFinished = false;
 
     // Draw grid
     ctx.lineWidth = 2;
@@ -165,10 +171,10 @@ function loadImages() {
 }
 
 function setElements() {
-    let eWidth = window.innerWidth > window.innerHeight ? 500 : (window.innerWidth - 30);
+    let eWidth = window.innerWidth > window.innerHeight ? (window.innerHeight - 200) : (window.innerWidth - 30);
     width = Math.floor(eWidth / cDim) * cDim;
-
-    let eHeight = window.innerWidth > window.innerHeight ? 500 : (window.innerHeight - 200);
+    
+    let eHeight = window.innerWidth > window.innerHeight ? (window.innerHeight - 200) : (window.innerHeight - width/2);
     height = Math.floor(eHeight / cDim) * cDim;
     
     canvas.width = width;
@@ -178,11 +184,11 @@ function setElements() {
     header_container.marginLeft = canvas.offsetLeft.toString() + "px";
     header_container.width = width.toString() + "px";
 
-    minesCounter.style.fontSize = (width/15).toString() + "px";
-    minesCounter.style.left = (canvas.offsetLeft+30).toString() + "px";
+    minesCounter.style.fontSize = (width/18).toString() + "px";
+    minesCounter.style.left = (canvas.offsetLeft+25).toString() + "px";
 
     result.width = width/5;
 
-    timeCounter.style.fontSize = (width/15).toString() + "px";
-    timeCounter.style.right = (canvas.offsetLeft+30).toString() + "px";
+    timeCounter.style.fontSize = (width/18).toString() + "px";
+    timeCounter.style.right = (canvas.offsetLeft+25).toString() + "px";
 }
