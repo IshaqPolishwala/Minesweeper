@@ -6,12 +6,13 @@ const ctx = canvas.getContext("2d");
 
 let board, gameFinished, minesLeft, timeElapsed, timer;
 const images = {};
-let dim, cDim = 30;                                     // Length of board & cell
+let width, height, cDim = 35;                           // Length of board & cell
 
 setElements();                                          // Set according to device
 
-const nCells = dim / cDim;                              // Number of cells (In a row/col)
-const totalMines = Math.floor(nCells*nCells / 7);       // 1 out 7 cells will contain a mine
+const nRows = height / cDim;                            // Number of cells in a row
+const nCols = width / cDim;                             // Number of cells in a column
+const totalMines = Math.floor(nRows*nCols / 7);         // 1 out 7 cells will contain a mine
 
 loadImages();
 setup();
@@ -23,8 +24,8 @@ result.addEventListener('click', function() {
 
 function checkWin() {
     let flag = true, cell;
-    for(let i=0; i<nCells; i++) {
-        for(let j=0; j<nCells; j++) {
+    for(let i=0; i<nRows; i++) {
+        for(let j=0; j<nCols; j++) {
             cell = board[i][j];
             if(cell.mine && !cell.marked || !cell.mine && !cell.revealed) {
                     flag = false;
@@ -35,12 +36,8 @@ function checkWin() {
     if(flag) {
         clearInterval(timer);
         result.src = images['smiley_won'];
-        
         gameFinished = true;
-        
-        canvas.removeEventListener('click', handleClick);
-        canvas.removeEventListener('click', handleClickMobile);
-        canvas.removeEventListener('contextmenu', handleMarker);
+        removeAllEvents();
     }
 }
 
@@ -48,16 +45,17 @@ function gameOver() {
     clearInterval(timer);
     gameFinished = true;
     result.src = images['smiley_lost'];
-    for(let i=0; i<nCells; i++) {
-        for(let j=0; j<nCells; j++) {
+    for(let i=0; i<nRows; i++) {
+        for(let j=0; j<nCols; j++) {
             board[i][j].revealed = true;
         }
     }
+    removeAllEvents();
 }
 
 function display() {
-    for(let i=0; i<nCells; i++) {
-        for(let j=0; j<nCells; j++) {
+    for(let i=0; i<nRows; i++) {
+        for(let j=0; j<nCols; j++) {
             board[i][j].display();
         }
     }
@@ -77,28 +75,32 @@ function setup() {
 
     // Draw grid
     ctx.lineWidth = 2;
-    for(let i=0; i<=dim; i+=cDim){
+    for(let i=0; i<=height; i+=cDim){
         ctx.beginPath();
         ctx.moveTo(0, i);
-        ctx.lineTo(dim, i);
+        ctx.lineTo(width, i);
+        ctx.stroke();
+    }
+    for(let i=0; i<=width; i+=cDim){
+        ctx.beginPath();
         ctx.moveTo(i, 0);
-        ctx.lineTo(i, dim);
+        ctx.lineTo(i, height);
         ctx.stroke();
     }
 
     // Initialize each cell of the board
-    board = new Array(nCells);
-    for(let i=0; i<nCells; i++) {
-        board[i] = new Array(nCells);
-        for(let j=0; j<nCells; j++) {
+    board = new Array(nRows);
+    for(let i=0; i<nRows; i++) {
+        board[i] = new Array(nCols);
+        for(let j=0; j<nCols; j++) {
             board[i][j] = new Cell(i, j);
         }
     }
 
     // Place mines on the board randomly
     for(let x=0; x<totalMines; x++) {
-        let i = Math.floor(Math.random() * nCells);
-        let j = Math.floor(Math.random() * nCells);
+        let i = Math.floor(Math.random() * nRows);
+        let j = Math.floor(Math.random() * nCols);
         if(board[i][j].mine) {
             x--;
             continue;
@@ -107,8 +109,8 @@ function setup() {
     }
 
     // Count neighbouring mines for each cell
-    for(let i=0; i<nCells; i++) {
-        for(let j=0; j<nCells; j++) {
+    for(let i=0; i<nRows; i++) {
+        for(let j=0; j<nCols; j++) {
             board[i][j].countMines();
         }
     }
@@ -164,19 +166,23 @@ function loadImages() {
 
 function setElements() {
     let eWidth = window.innerWidth > window.innerHeight ? 500 : (window.innerWidth - 30);
-    dim = Math.floor(eWidth / cDim) * cDim;
-    canvas.width = dim;
-    canvas.height = dim;
+    width = Math.floor(eWidth / cDim) * cDim;
+
+    let eHeight = window.innerWidth > window.innerHeight ? 500 : (window.innerHeight - 200);
+    height = Math.floor(eHeight / cDim) * cDim;
+    
+    canvas.width = width;
+    canvas.height = height;
 
     let header_container = document.getElementById("header-container").style;
     header_container.marginLeft = canvas.offsetLeft.toString() + "px";
-    header_container.width = dim.toString() + "px";
+    header_container.width = width.toString() + "px";
 
-    minesCounter.style.fontSize = (dim/15).toString() + "px";
+    minesCounter.style.fontSize = (width/15).toString() + "px";
     minesCounter.style.left = (canvas.offsetLeft+30).toString() + "px";
 
-    result.width = dim/6;
+    result.width = width/5;
 
-    timeCounter.style.fontSize = (dim/15).toString() + "px";
+    timeCounter.style.fontSize = (width/15).toString() + "px";
     timeCounter.style.right = (canvas.offsetLeft+30).toString() + "px";
 }

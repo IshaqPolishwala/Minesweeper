@@ -21,7 +21,7 @@ class Cell {
             for(let xj=-1; xj<=1; xj++) {
                 let i = this.i + xi;
                 let j = this.j + xj;
-                if(i>=0 && i<nCells && j>=0 && j<nCells) {
+                if(i>=0 && i<nRows && j>=0 && j<nCols) {
                     let neighbour = board[i][j];
                     if(!neighbour.mine && !neighbour.revealed)
                         neighbour.reveal();
@@ -39,7 +39,7 @@ class Cell {
             for(let xj=-1; xj<=1; xj++) {
                 let i = this.i + xi;
                 let j = this.j + xj;
-                if(i>=0 && i<nCells && j>=0 && j<nCells) {
+                if(i>=0 && i<nRows && j>=0 && j<nCols) {
                     let neighbour = board[i][j];
                     if(neighbour.mine)
                         count++;

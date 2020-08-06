@@ -30,9 +30,6 @@ function handleClick(e) {
             x = j * cDim;
             y = i * cDim;
             ctx.drawImage(images['mine_red'], x+1, y+1, cDim-2, cDim-2);
-            canvas.removeEventListener('click', handleClick);
-            canvas.removeEventListener('click', handleClickMobile);
-            canvas.removeEventListener('contextmenu', handleMarker);
             return;
         }
     }
@@ -66,4 +63,10 @@ function startTimer() {
     }, 1000);
 
     canvas.removeEventListener('click', startTimer);
+}
+
+function removeAllEvents() {
+    canvas.removeEventListener('click', handleClick);
+    canvas.removeEventListener('click', handleClickMobile);
+    canvas.removeEventListener('contextmenu', handleMarker);
 }
