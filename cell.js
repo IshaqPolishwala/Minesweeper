@@ -60,8 +60,12 @@ class Cell {
                 ctx.drawImage(images['cell'], x+1, y+1, cDim-2, cDim-2);
         }
         else {
-            if(this.mine)
-                ctx.drawImage(images['mine'], x+1, y+1, cDim-2, cDim-2);
+            if(this.mine) {
+                if(this.marked)
+                    ctx.drawImage(images['marker'], x+1, y+1, cDim-2, cDim-2);
+                else
+                    ctx.drawImage(images['mine'], x+1, y+1, cDim-2, cDim-2);
+            }
             else if(this.marked)
                 ctx.drawImage(images['mine_wrong'], x+1, y+1, cDim-2, cDim-2);
             else

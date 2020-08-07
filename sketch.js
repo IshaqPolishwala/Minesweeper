@@ -127,7 +127,9 @@ function setup() {
         canvas.addEventListener('contextmenu', handleMarker);       // For detecting right click
     }
     else {
-        canvas.addEventListener('click', handleClickMobile);
+        canvas.addEventListener('click', handleClick);
+        canvas.addEventListener('touchstart', handleTouchStart);
+        canvas.addEventListener('touchend', handleTouchEnd);
     }
 
     canvas.addEventListener('click', startTimer);
@@ -174,7 +176,7 @@ function setElements() {
     let eWidth = window.innerWidth > window.innerHeight ? (window.innerHeight - 200) : (window.innerWidth - 30);
     width = Math.floor(eWidth / cDim) * cDim;
     
-    let eHeight = window.innerWidth > window.innerHeight ? (window.innerHeight - 200) : (window.innerHeight - width/2);
+    let eHeight = window.innerWidth > window.innerHeight ? (window.innerHeight - 250) : (window.innerHeight - width/2);
     height = Math.floor(eHeight / cDim) * cDim;
     
     canvas.width = width;

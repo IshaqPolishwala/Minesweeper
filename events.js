@@ -1,18 +1,15 @@
-let clicks = 0, clickTimer;
+let markerTimer, isLongPressed = false;
 
-function handleClickMobile(e) {             // (Single-click => Reveal) (Double-click => Handle marker)
-    clicks++;
-    if(clicks == 1) {
-        clickTimer = setTimeout(function() {
-            handleClick(e);
-            clicks = 0;
-        }, 200);
-    }
-    else {
-        clearTimeout(clickTimer);
-        handleMarker(e);
-        clicks = 0;
-    }
+function handleTouchStart(e) {
+    isLongPressed = false;
+    markerTimer = setTimeout(function() {
+        isLongPressed = true;
+        handleMarker(e.touches[0]);
+    }, 300);
+}
+
+function handleTouchEnd() {
+    clearTimeout(markerTimer);
 }
 
 function handleClick(e) {
@@ -21,7 +18,7 @@ function handleClick(e) {
     let i = Math.floor(y/cDim);
     let j = Math.floor(x/cDim);
 
-    if(!board[i][j].marked) {
+    if(!board[i][j].marked && !isLongPressed) {
         board[i][j].reveal();
 
         if(board[i][j].mine) {
@@ -38,7 +35,8 @@ function handleClick(e) {
 }
 
 function handleMarker(e) {
-    e.preventDefault();             // Cancel system right-click event
+    if(e.type == 'contextmenu')
+        e.preventDefault();             // Cancel system right-click event
     
     let x = e.pageX - canvas.offsetLeft;
     let y = e.pageY - canvas.offsetTop;
@@ -49,6 +47,7 @@ function handleMarker(e) {
         board[i][j].marked = !board[i][j].marked;
         minesLeft += board[i][j].marked ? -1 : 1;
         minesCounter.innerHTML = "Mines: " + minesLeft;
+        window.navigator.vibrate(10);
     }
         
     display();
@@ -66,6 +65,7 @@ function startTimer() {
 
 function removeAllEvents() {
     canvas.removeEventListener('click', handleClick);
-    canvas.removeEventListener('click', handleClickMobile);
     canvas.removeEventListener('contextmenu', handleMarker);
+    canvas.removeEventListener('touchstart', handleTouchStart);
+    canvas.removeEventListener('touchend', handleTouchEnd);
 }
